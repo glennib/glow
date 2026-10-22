@@ -173,6 +173,16 @@ func validateOptions(cmd *cobra.Command) error {
 	preserveNewLines = viper.GetBool("preserveNewLines")
 	showLineNumbers = viper.GetBool("showLineNumbers")
 
+	// A display mode chosen on the command line overrides the other mode
+	// coming from the config file or environment.
+	pagerFlag, tuiFlag := cmd.Flags().Changed("pager"), cmd.Flags().Changed("tui")
+	if tui && tuiFlag && !pagerFlag {
+		pager = false
+	}
+	if pager && pagerFlag && !tuiFlag {
+		tui = false
+	}
+
 	if pager && tui {
 		return errors.New("cannot use both pager and tui")
 	}
