@@ -1,7 +1,12 @@
 package main
 
 import (
+	"bytes"
+	"io"
+	"strings"
 	"testing"
+
+	"github.com/spf13/cobra"
 )
 
 func TestGlowFlags(t *testing.T) {
@@ -37,5 +42,30 @@ func TestGlowFlags(t *testing.T) {
 		if !v.check() {
 			t.Errorf("Parsing flag failed: %s", v.args)
 		}
+	}
+}
+
+func TestCLIPreserveNewLines(t *testing.T) {
+	oldPager, oldTUI, oldStyle, oldWidth, oldPreserve := pager, tui, style, width, preserveNewLines
+	t.Cleanup(func() {
+		pager, tui, style, width, preserveNewLines = oldPager, oldTUI, oldStyle, oldWidth, oldPreserve
+	})
+	pager, tui, style, width = false, false, "notty", 80
+
+	render := func(preserve bool) string {
+		preserveNewLines = preserve
+		var buf bytes.Buffer
+		src := &source{reader: io.NopCloser(strings.NewReader("hello\nworld\n")), URL: "test.md"}
+		if err := executeCLI(&cobra.Command{}, src, &buf); err != nil {
+			t.Fatal(err)
+		}
+		return buf.String()
+	}
+
+	if out := render(false); !strings.Contains(out, "hello world") {
+		t.Errorf("expected soft line break to be joined, got %q", out)
+	}
+	if out := render(true); strings.Contains(out, "hello world") || !strings.Contains(out, "world") {
+		t.Errorf("expected soft line break to be preserved, got %q", out)
 	}
 }
