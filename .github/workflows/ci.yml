@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - name: Check go.mod and go.sum are tidy
+        if: runner.os == 'Linux'
+        run: |
+          go mod tidy
+          git diff --exit-code
+      - run: go build ./...
+      - run: go test ./...
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: go test -race -covermode atomic -coverprofile=profile.cov ./...
+      - name: Summarize coverage
+        run: |
+          go tool cover -func=profile.cov | tail -n 1 | tee -a "$GITHUB_STEP_SUMMARY"
+
+  govulncheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+
+  dist:
+    uses: ./.github/workflows/dist.yml

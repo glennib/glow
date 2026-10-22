@@ -9,9 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9.3.0
         with:
+          # Keep in sync with mise.toml.
+          version: v2.15.0
           # Optional: golangci-lint command line arguments.
           args: --issues-exit-code=0
           # Optional: show only new issues if it's a pull request. The default value is `false`.
