@@ -25,6 +25,13 @@ linters:
     - unparam
     - whitespace
     - wrapcheck
+  settings:
+    gomoddirectives:
+      # Forks carrying the table width fixes; see "About this fork" in the
+      # README.
+      replace-allow-list:
+        - charm.land/glamour/v2
+        - charm.land/lipgloss/v2
   exclusions:
     rules:
       - text: '(slog|log)\.\w+'
