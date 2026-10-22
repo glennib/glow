@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"io"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -80,6 +82,59 @@ func saveOptions(t *testing.T) {
 		width, mouse, pager, tui = oldWidth, oldMouse, oldPager, oldTUI
 		showAllFiles, preserveNewLines, showLineNumbers, style = oldAll, oldPreserve, oldLineNumbers, oldStyle
 	})
+}
+
+func TestConfigFlag(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "custom.yml")
+	if err := os.WriteFile(path, []byte("width: 42\npreserveNewLines: true\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	tests := []struct {
+		name      string
+		args      []string
+		wantWidth uint
+		wantError bool
+	}{
+		{name: "default config", wantWidth: 80},
+		{name: "config flag", args: []string{"--config", path}, wantWidth: 42},
+		{name: "missing config file", args: []string{"--config", filepath.Join(dir, "missing.yml")}, wantError: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			saveOptions(t)
+			oldConfigFile := configFile
+			t.Cleanup(func() { configFile = oldConfigFile })
+			viper.Reset()
+			t.Cleanup(viper.Reset)
+			viper.SetDefault("style", "auto")
+			viper.SetDefault("width", 80)
+
+			cmd := &cobra.Command{Use: "glow"}
+			cmd.Flags().StringVar(&configFile, "config", "", "")
+			if err := cmd.ParseFlags(tt.args); err != nil {
+				t.Fatal(err)
+			}
+
+			err := validateOptions(cmd)
+			if tt.wantError {
+				if err == nil {
+					t.Fatal("expected an error for a missing config file")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			if width != tt.wantWidth {
+				t.Errorf("width=%d; want %d", width, tt.wantWidth)
+			}
+			if wantPreserve := tt.wantWidth == 42; preserveNewLines != wantPreserve {
+				t.Errorf("preserveNewLines=%v; want %v", preserveNewLines, wantPreserve)
+			}
+		})
+	}
 }
 
 func TestDisplayModePrecedence(t *testing.T) {

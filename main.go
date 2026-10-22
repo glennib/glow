@@ -163,7 +163,26 @@ func validateStyle(style string) error {
 	return nil
 }
 
+// readConfigFlag reads the config file given with --config, replacing the one
+// loaded from the default locations.
+func readConfigFlag(cmd *cobra.Command) error {
+	// The config command creates the file if it's missing, so it must not fail
+	// on reading it here.
+	if cmd == configCmd || !cmd.Flags().Changed("config") {
+		return nil
+	}
+	viper.SetConfigFile(configFile)
+	if err := viper.ReadInConfig(); err != nil {
+		return fmt.Errorf("unable to read config file: %w", err)
+	}
+	return nil
+}
+
 func validateOptions(cmd *cobra.Command) error {
+	if err := readConfigFlag(cmd); err != nil {
+		return err
+	}
+
 	// grab config values from Viper
 	width = viper.GetUint("width")
 	mouse = viper.GetBool("mouse")
