@@ -220,7 +220,7 @@ func stdinIsPipe() (bool, error) {
 	return false, nil
 }
 
-func execute(cmd *cobra.Command, args []string) error {
+func execute(_ *cobra.Command, args []string) error {
 	// if stdin is a pipe then use stdin for input. note that you can also
 	// explicitly use a - to read from stdin.
 	if yes, err := stdinIsPipe(); err != nil {
@@ -228,7 +228,7 @@ func execute(cmd *cobra.Command, args []string) error {
 	} else if yes {
 		src := &source{reader: os.Stdin}
 		defer src.reader.Close() //nolint:errcheck
-		return executeCLI(cmd, src, os.Stdout)
+		return executeCLI(src, os.Stdout)
 	}
 
 	switch len(args) {
@@ -252,7 +252,7 @@ func execute(cmd *cobra.Command, args []string) error {
 	// CLI
 	default:
 		for _, arg := range args {
-			if err := executeArg(cmd, arg, os.Stdout); err != nil {
+			if err := executeArg(arg, os.Stdout); err != nil {
 				return err
 			}
 		}
@@ -261,17 +261,17 @@ func execute(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func executeArg(cmd *cobra.Command, arg string, w io.Writer) error {
+func executeArg(arg string, w io.Writer) error {
 	// create an io.Reader from the markdown source in cli-args
 	src, err := sourceFromArg(arg)
 	if err != nil {
 		return err
 	}
 	defer src.reader.Close() //nolint:errcheck
-	return executeCLI(cmd, src, w)
+	return executeCLI(src, w)
 }
 
-func executeCLI(cmd *cobra.Command, src *source, w io.Writer) error {
+func executeCLI(src *source, w io.Writer) error {
 	b, err := io.ReadAll(src.reader)
 	if err != nil {
 		return fmt.Errorf("unable to read from reader: %w", err)
@@ -318,7 +318,7 @@ func executeCLI(cmd *cobra.Command, src *source, w io.Writer) error {
 
 	// display
 	switch {
-	case pager || cmd.Flags().Changed("pager"):
+	case pager:
 		pagerCmd := os.Getenv("PAGER")
 		if pagerCmd == "" {
 			pagerCmd = "less -r"
@@ -335,7 +335,7 @@ func executeCLI(cmd *cobra.Command, src *source, w io.Writer) error {
 			return fmt.Errorf("unable to run command: %w", err)
 		}
 		return nil
-	case tui || cmd.Flags().Changed("tui"):
+	case tui:
 		path := ""
 		if !isURL(src.URL) {
 			path = src.URL

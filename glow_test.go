@@ -5,8 +5,6 @@ import (
 	"io"
 	"strings"
 	"testing"
-
-	"github.com/spf13/cobra"
 )
 
 func TestGlowFlags(t *testing.T) {
@@ -56,7 +54,7 @@ func TestCLIPreserveNewLines(t *testing.T) {
 		preserveNewLines = preserve
 		var buf bytes.Buffer
 		src := &source{reader: io.NopCloser(strings.NewReader("hello\nworld\n")), URL: "test.md"}
-		if err := executeCLI(&cobra.Command{}, src, &buf); err != nil {
+		if err := executeCLI(src, &buf); err != nil {
 			t.Fatal(err)
 		}
 		return buf.String()
