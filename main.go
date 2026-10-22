@@ -28,9 +28,9 @@ import (
 )
 
 var (
-	// Version as provided by goreleaser.
+	// Version is set at link time with -X by .github/scripts/dist.sh.
 	Version = ""
-	// CommitSHA as provided by goreleaser.
+	// CommitSHA is set at link time with -X by .github/scripts/dist.sh.
 	CommitSHA = ""
 
 	readmeNames      = []string{"README.md", "README", "Readme.md", "Readme", "readme.md", "readme"}
