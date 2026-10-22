@@ -2,6 +2,27 @@
 
 Render markdown on the CLI, with _pizzazz_!
 
+## About this fork
+
+This is a fork of [charmbracelet/glow](https://github.com/charmbracelet/glow).
+It differs from upstream in these ways:
+
+- **CLI fixes**
+  - `--config <file>` is read. Upstream declares the flag but only loads the
+    config from the default locations.
+  - A display mode flag (`-p` or `-t`) overrides the mode set in the config or
+    environment, instead of failing with `cannot use both pager and tui`
+    ([charmbracelet/glow#1068](https://github.com/charmbracelet/glow/issues/1068)).
+  - `--pager=false` and `--tui=false` are respected.
+  - `preserveNewLines` (`-n`) applies to CLI output as well as the TUI
+    ([charmbracelet/glow#829](https://github.com/charmbracelet/glow/issues/829)).
+- **Builds and releases**: CI runs on GitHub-hosted runners without paid
+  tooling. Releases are published on [this fork's releases page][releases] for
+  Linux, macOS and Windows on x86_64 and arm64, with checksums and build
+  provenance attestations. There are no package-manager, deb/rpm/apk or
+  container image builds.
+- **Go toolchain**: tracks the latest Go release.
+
 <p align="center">
     <img src="https://stuff.charm.sh/glow/glow-banner-github.gif" alt="Glow Logo">
     <a href="https://github.com/glennib/glow/releases"><img src="https://img.shields.io/github/release/glennib/glow.svg" alt="Latest Release"></a>
@@ -25,9 +46,8 @@ Git repository.
 
 ## Installation
 
-This is a fork of [charmbracelet/glow](https://github.com/charmbracelet/glow).
-Its builds are published on [this fork's releases page][releases]. The package
-managers and `go install` below install upstream Glow.
+Builds of this fork are published on [its releases page][releases]. The
+package managers and `go install` below install upstream Glow.
 
 ### Download a release
 
