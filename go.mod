@@ -1,6 +1,6 @@
 module charm.land/glow/v3
 
-go 1.26.10
+go 1.27.3
 
 require (
 	charm.land/bubbles/v2 v2.1.1
