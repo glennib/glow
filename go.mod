@@ -73,6 +73,6 @@ require (
 	golang.org/x/sync v0.24.0 // indirect
 )
 
-replace charm.land/glamour/v2 => github.com/glennib/glamour/v2 v2.0.0-20261022092728-bf3bddf5e865
+replace charm.land/glamour/v2 => github.com/glennib/glamour/v2 v2.0.0-20261023080051-51bf9c6b4748
 
 replace charm.land/lipgloss/v2 => github.com/glennib/lipgloss/v2 v2.0.0-20261022092139-ed68a855584d

@@ -58,8 +58,8 @@ github.com/frankban/quicktest v1.14.6 h1:7Xjx+VpznH+oBnejlPUj8oUpdxnVs4f8XU8WnHk
 github.com/frankban/quicktest v1.14.6/go.mod h1:4ptaffx2x8+WTWXmUCuVU6aPUX1/Mz7zb5vbUoiM6w0=
 github.com/fsnotify/fsnotify v1.10.1 h1:b0/UzAf9yR5rhf3RPm9gf3ehBPpf0oZKIjtpKrx59Ho=
 github.com/fsnotify/fsnotify v1.10.1/go.mod h1:TLheqan6HD6GBK6PrDWyDPBaEV8LspOxvPSjC+bVfgo=
-github.com/glennib/glamour/v2 v2.0.0-20261022092728-bf3bddf5e865 h1:nPARB7XZykDbX+o+6RUk7PTS9qQR64msYm77cvfZVbo=
-github.com/glennib/glamour/v2 v2.0.0-20261022092728-bf3bddf5e865/go.mod h1:wqGcmrnBmbunm0/LszemUKpYwWxvPPBkEno7KusMy6s=
+github.com/glennib/glamour/v2 v2.0.0-20261023080051-51bf9c6b4748 h1:KUonP8oPd5WuVBKpmHmLTPLplr7BuC8wulut3FcR97c=
+github.com/glennib/glamour/v2 v2.0.0-20261023080051-51bf9c6b4748/go.mod h1:wqGcmrnBmbunm0/LszemUKpYwWxvPPBkEno7KusMy6s=
 github.com/glennib/lipgloss/v2 v2.0.0-20261022092139-ed68a855584d h1:4rX6tLFu4axI78TtEb71LjBr50f+xtGNVPpNoipRRjE=
 github.com/glennib/lipgloss/v2 v2.0.0-20261022092139-ed68a855584d/go.mod h1:wwfOgrNqUA9yjL8nmG6BIO0qQnmkEgJ8ISptbme83gI=
 github.com/go-logfmt/logfmt v0.6.1 h1:4hvbpePJKnIzH1B+8OR/JPbTx37NktoI9LE2QZBBkvE=
